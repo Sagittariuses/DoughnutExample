@@ -16,6 +16,8 @@ namespace DoughnutExample
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region LiveChart.WPF and 2
+
         List<string> ColorsHEX = new List<string>()
         {
             "#EA5D5F",
@@ -61,9 +63,7 @@ namespace DoughnutExample
                 }
             };
 
-            //adding values or series will update and animate the chart automatically
-            //SeriesCollection.Add(new PieSeries());
-            //SeriesCollection[0].Values.Add(5);
+
             Series  = new ISeries[]
             {
                 new PieSeries<double> { Values = new List<double> { 2 }, InnerRadius = 50},
@@ -84,7 +84,7 @@ namespace DoughnutExample
             {
                 foreach (var observable in series.Values.Cast<ObservableValue>())
                 {
-                    observable.Value = r.Next(0, 10);
+                    observable.Value = r.Next(1, 100);
                 }
             }
         }
@@ -108,7 +108,7 @@ namespace DoughnutExample
                 Fill = (Brush) new BrushConverter().ConvertFrom(ColorsHEX[HexId]),
                 Margin = new Thickness(-15 - 15 -15 -15),
                 StrokeThickness = 0,
-                Stroke = null,
+                Stroke = (Brush)new BrushConverter().ConvertFrom(ColorsHEX[HexId]),
                 
                 
             });
@@ -125,7 +125,7 @@ namespace DoughnutExample
             var r = new Random();
             foreach (var series in SeriesCollection)
             {
-                series.Values.Add(new ObservableValue(r.Next(0, 10)));
+                series.Values.Add(new ObservableValue(r.Next(1, 10)));
             }
         }
 
@@ -168,5 +168,7 @@ namespace DoughnutExample
 
 
         }
+        #endregion
+
     }
 }
