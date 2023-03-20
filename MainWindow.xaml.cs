@@ -23,6 +23,8 @@ namespace DoughnutExample
             "#EA5D5F",
             "#E5A119",
             "#27AE60",
+            "#E6E3E2",
+
 
             //errors hex
             "#9BB1DB",
@@ -39,31 +41,31 @@ namespace DoughnutExample
         public MainWindow()
         {
             InitializeComponent();
-            SeriesCollection = new SeriesCollection
+            seriesCollection = new SeriesCollection
             {
+              
                 new PieSeries
                 {
-                    Title = "Chrome",
-                    Values = new ChartValues<ObservableValue> { new ObservableValue(8) },
+                    Title = "Errors",
+                    Values = new ChartValues<ObservableValue> { new ObservableValue(1) },
+                    Fill = (Brush) new BrushConverter().ConvertFrom(ColorsHEX[0]),
+                    Margin = new Thickness(-15 - 15 -15 -15),
+                    StrokeThickness = 0,
+                    Stroke = (Brush)new BrushConverter().ConvertFrom(ColorsHEX[0]),
+                    PushOut = 0
                 },
+               
                 new PieSeries
                 {
-                    Title = "Mozilla",
-                    Values = new ChartValues<ObservableValue> { new ObservableValue(6) },
-                },
-                new PieSeries
-                {
-                    Title = "Opera",
+                    Title = "Fill ",
                     Values = new ChartValues<ObservableValue> { new ObservableValue(10) },
+                    Fill = (Brush) new BrushConverter().ConvertFrom(ColorsHEX[3]),
+                    Margin = new Thickness(-15 - 15 -15 -15),
+                    StrokeThickness = 0,
+                    Stroke = (Brush)new BrushConverter().ConvertFrom(ColorsHEX[3]),
                 },
-                new PieSeries
-                {
-                    Title = "Explorer",
-                    Values = new ChartValues<ObservableValue> { new ObservableValue(4) },
-                }
+            
             };
-
-
             Series  = new ISeries[]
             {
                 new PieSeries<double> { Values = new List<double> { 2 }, InnerRadius = 50},
@@ -74,13 +76,18 @@ namespace DoughnutExample
             DataContext = this;
         }
 
-        public SeriesCollection SeriesCollection { get; set; }
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("aaaaaaaaaa");
+        }
+
+        public SeriesCollection seriesCollection { get; set; }
         public ISeries[] Series { get; set; }
         private void UpdateAllOnClick(object sender, RoutedEventArgs e)
         {
             var r = new Random();
 
-            foreach (var series in SeriesCollection)
+            foreach (var series in seriesCollection)
             {
                 foreach (var observable in series.Values.Cast<ObservableValue>())
                 {
@@ -92,7 +99,7 @@ namespace DoughnutExample
         private void AddSeriesOnClick(object sender, RoutedEventArgs e)
         {
             var r = new Random();
-            var c = SeriesCollection.Count > 0 ? SeriesCollection[0].Values.Count : 5;
+            var c = seriesCollection.Count > 0 ? seriesCollection[0].Values.Count : 5;
 
             var vals = new ChartValues<ObservableValue>();
 
@@ -102,36 +109,43 @@ namespace DoughnutExample
             }
 
             int HexId = GetHexID(r);
-            SeriesCollection.Add(new PieSeries
+            seriesCollection.Add(new PieSeries
             {
                 Values = vals,
                 Fill = (Brush) new BrushConverter().ConvertFrom(ColorsHEX[HexId]),
                 Margin = new Thickness(-15 - 15 -15 -15),
                 StrokeThickness = 0,
                 Stroke = (Brush)new BrushConverter().ConvertFrom(ColorsHEX[HexId]),
-                
+                PushOut = -20,
                 
             });
         }
 
         private void RemoveSeriesOnClick(object sender, RoutedEventArgs e)
         {
-            if (SeriesCollection.Count > 0)
-                SeriesCollection.RemoveAt(0);
+            if (seriesCollection.Count > 0)
+                seriesCollection.RemoveAt(0);
         }
 
         private void AddValueOnClick(object sender, RoutedEventArgs e)
         {
             var r = new Random();
-            foreach (var series in SeriesCollection)
+            foreach (var series in seriesCollection)
             {
-                series.Values.Add(new ObservableValue(r.Next(1, 10)));
+                if (series.Title.StartsWith("E"))
+                {
+                    series.Values.Add(new ObservableValue(1));
+                }
+                else
+                {
+                    series.Values.Add(new ObservableValue(10));
+                }
             }
         }
 
         private void RemoveValueOnClick(object sender, RoutedEventArgs e)
         {
-            foreach (var series in SeriesCollection)
+            foreach (var series in seriesCollection)
             {
                 if (series.Values.Count > 0)
                     series.Values.RemoveAt(0);
@@ -140,7 +154,7 @@ namespace DoughnutExample
 
         private void RestartOnClick(object sender, RoutedEventArgs e)
         {
-            Chart.Update(true, true);
+            //Chart.Update(true, true);
         }
         
         int GetHexID(Random r)
@@ -168,7 +182,19 @@ namespace DoughnutExample
 
 
         }
+
         #endregion
 
+        private void dragMe(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            try
+            {
+                DragMove();
+            }
+            catch
+            {
+
+            }
+        }
     }
 }
